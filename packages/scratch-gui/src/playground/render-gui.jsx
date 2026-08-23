@@ -8,7 +8,7 @@ import HashParserHOC from '../lib/hash-parser-hoc.jsx';
 import log from '../lib/log.js';
 import {PLATFORM} from '../lib/platform.js';
 import LocalAiMentor from './local-ai-mentor.jsx';
-import './local-ai-mentor.css';
+import './local-ai-mentor.raw.css';
 
 const onClickLogo = () => {
     window.location = 'https://scratch.mit.edu';
