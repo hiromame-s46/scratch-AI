@@ -13,6 +13,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 URL = "http://localhost:5173/"
+BUILD_COMMANDS = [
+    ("task-herder", ["npm", "--workspace", "@scratch/task-herder", "run", "build"]),
+    ("scratch-storage", ["npm", "--workspace", "@scratch/scratch-storage", "run", "build"]),
+    ("scratch-svg-renderer", ["npm", "--workspace", "@scratch/scratch-svg-renderer", "run", "build"]),
+    ("scratch-render", ["npm", "--workspace", "@scratch/scratch-render", "run", "build"]),
+    ("scratch-vm", ["npm", "--workspace", "@scratch/scratch-vm", "run", "build"]),
+    ("scratch-gui", ["npm", "--workspace", "@scratch/scratch-gui", "run", "build"]),
+]
 
 
 def wait_for_server(process, timeout=30):
@@ -28,6 +36,25 @@ def wait_for_server(process, timeout=30):
     return False
 
 
+def prepare_project():
+    if not (ROOT / "node_modules").exists():
+        print("初回セットアップ: npmパッケージをインストールしています...")
+        result = subprocess.run(["npm", "ci", "--no-audit", "--no-fund"], cwd=ROOT)
+        if result.returncode != 0:
+            return False
+
+    if all((ROOT / package / "dist").exists() for package, _ in BUILD_COMMANDS):
+        return True
+
+    print("初回セットアップ: Scratch関連パッケージをビルドしています...")
+    for package, command in BUILD_COMMANDS:
+        print(f"  {package}をビルド中...")
+        result = subprocess.run(command, cwd=ROOT)
+        if result.returncode != 0:
+            return False
+    return True
+
+
 def main():
     if shutil.which("node") is None or shutil.which("npm") is None:
         print("Node.js/npmが見つかりません。Node.js v24.19.0 LTSをインストールしてください。")
@@ -35,10 +62,8 @@ def main():
         input("Enterキーで終了します...")
         return 1
 
-    if not (ROOT / "node_modules").exists():
-        print("先にnpm ciを実行して依存関係をインストールしてください。")
-        print(f"cd {ROOT}")
-        print("npm ci")
+    if not prepare_project():
+        print("セットアップに失敗しました。表示されたエラーを確認してください。")
         input("Enterキーで終了します...")
         return 1
 
