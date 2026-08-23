@@ -198,7 +198,8 @@
 }
 
 .local-ai-input input,
-.local-ai-settings input {
+.local-ai-settings input,
+.local-ai-settings select {
     min-width: 0;
     height: 36px;
     padding: 0 9px;
@@ -210,12 +211,19 @@
     font-size: 10px;
 }
 
+.local-ai-settings select {
+    width: 100%;
+    appearance: none;
+    cursor: pointer;
+}
+
 .local-ai-input input {
     flex: 1;
 }
 
 .local-ai-input input:focus,
-.local-ai-settings input:focus {
+.local-ai-settings input:focus,
+.local-ai-settings select:focus {
     border-color: #6ad0be;
 }
 
@@ -232,6 +240,12 @@
 .local-ai-input button {
     width: 36px;
     font-size: 17px;
+}
+
+.local-ai-input button:disabled,
+.local-ai-input input:disabled {
+    cursor: wait;
+    opacity: .55;
 }
 
 .local-ai-settings {
@@ -257,6 +271,10 @@
     margin: 0;
     color: #7890a8;
     font-size: 8px;
+}
+
+.local-ai-settings-note {
+    color: #9bc6bd !important;
 }
 
 .local-ai-settings > button {
